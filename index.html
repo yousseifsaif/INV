@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>دعوة خطوبه احمد</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Aref+Ruqaa:wght@400;700&display=swap" rel="stylesheet">
+<link href='https://fonts.googleapis.com/css?family=Pinyon Script' rel='stylesheet'>
+
 <style>
 :root{--bg:#f6efe3;--ink:#3a2e26;--accent:#a8742f;--card:#fffaf0;--line:#d9c7a6;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -45,20 +47,11 @@ body.lock{overflow:hidden}
 <div id="gate"><div class="env">💌</div><div class="t msg">عندك دعوة فرح</div><button id="open">افتح الدعوة</button></div>
 
 <section class="hero" data-seq>
-  <div class="t small" data-type="بسم الله الرحمن الرحيم"></div>
-  <div class="t small" data-type="يتشرفوا بدعوتكم لحضور فرح"></div>
-  <div class="t names" data-type="أحمد" data-delay="300"></div>
-  <span class="amp t" data-type="&"></span>
-  <div class="t names" data-type="......"></div>
-  <div class="hint">⌄ اسحب لتحت</div>
-</section>
-<section data-seq>
-  <div class="t small" data-type="ميعاد الفرح"></div>
-  <div class="t date" data-type="الاربعاء 4 نوفمبر 2026"></div>
-  <div class="t msg" data-type="الساعة 7:00 مساءً"></div>
-  <div class="cd" id="cd">
-    <div><b id="d">0</b>يوم</div><div><b id="h">0</b>ساعة</div><div><b id="m">0</b>دقيقة</div><div><b id="sc">0</b>ثانية</div>
-  </div>
+  <div class="t small" data-type="بسم الله الرحمن الرحيم" style="font-size: 60px; font-weight: bold;"></div>
+  <div class="t small" data-type="يتشرفوا بدعوتكم لحضور فرح"style="font-size: 20px;"></div>
+  <div class="t names" data-type="Ahmed" data-delay="300" style="font-family: 'Pinyon Script', cursive; font-size: 50px;"></div>
+  <span class="amp t" data-type="&" style="font-size: 34px;font-weight: bold;"></span>
+  <div class="t names" data-type="Nermin" data-delay="300" style="font-family: 'Pinyon Script'; font-size: 50px;"></div>
 </section>
 <section data-seq>
 <div class="frame">
@@ -69,7 +62,16 @@ body.lock{overflow:hidden}
   <div class="t msg" data-type="بقلوب مليانة فرحة، بنعلن بداية حكايتنا، ونتمنى وجودكم يكمّل فرحتنا ويدّيها طعم تاني."></div>
 </section>
 <section data-seq>
-  <div class="t small" data-type="مكان الفرح"></div>
+  <div class="t small" data-type="ميعاد الفرح" style="font-size: 34px;" ></div>
+  <div class="t date" data-type="الاربعاء 4 نوفمبر 2026"></div>
+  <div class="t msg" data-type="الساعة 7:00 مساءً"></div>
+  <div class="cd" id="cd">
+    <div><b id="d">0</b>يوم</div><div><b id="h">0</b>ساعة</div><div><b id="m">0</b>دقيقة</div><div><b id="sc">0</b>ثانية</div>
+  </div>
+</section>
+
+<section data-seq>
+  <div class="t small" data-type="مكان الفرح" style="font-size: 34px;"></div>
   <div class="t date" data-type="قاعة الماسة"></div>
   <div class="t msg" data-type="كورنيش المعادي"></div>
   <a class="btn" id="map" target="_blank" rel="noopener" href="https://www.google.com/maps/place/%D9%83%D9%88%D8%B1%D9%86%D9%8A%D8%B4+%D8%A7%D9%84%D9%85%D8%B9%D8%A7%D8%AF%D9%8A%E2%80%AD/@29.9774667,31.2360151,17z/data=!3m1!4b1!4m9!3m8!1s0x14584700162b4e77:0x94af99116aed59bc!5m2!4m1!1i2!8m2!3d29.9774621!4d31.2334402!16s%2Fg%2F11wc2klp59?authuser=0&entry=ttu&g_ep=EgoyMDI2MDkzMC4wIKXMDSoASAFQAw%3D%3D">افتح الموقع على الخريطة</a>
@@ -117,14 +119,21 @@ async function typeEl(el){
   el.classList.remove('caret');
 }
 async function play(sec){
+  sec.dataset.started=1;
   const f=sec.querySelector('.frame');
   if(f){f.classList.add('show');await sleep(900)}
   for(const el of sec.querySelectorAll('[data-type]')) await typeEl(el);
   const cd=sec.querySelector('.cd'); if(cd) cd.style.opacity=1;
   const b=sec.querySelector('.btn'); if(b) b.style.opacity=1;
+  // أوتو سكرول للسيكشن اللي بعده بعد ما الكتابة تخلص
+  const next=sec.nextElementSibling;
+  if(next&&next.matches('[data-seq]')&&!next.dataset.started){
+    await sleep(2000);
+    if(!next.dataset.started) next.scrollIntoView({behavior:'smooth',block:'start'});
+  }
 }
 const io=new IntersectionObserver(es=>es.forEach(e=>{
-  if(e.isIntersecting){io.unobserve(e.target);play(e.target)}
+  if(e.isIntersecting&&!e.target.dataset.started){io.unobserve(e.target);play(e.target)}
 }),{threshold:.5});
 document.getElementById('open').onclick=()=>{
   try{initAudio();if(ac.state==='suspended')ac.resume()}catch(e){}
