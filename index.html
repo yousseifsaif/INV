@@ -131,15 +131,40 @@ document.getElementById('open').onclick=()=>{
 // reveal button early in case of reduced layouts
 document.querySelectorAll('.btn').forEach(b=>b.style.opacity=0);
 
-const target=new Date('2026-11-04T19:00:00');
-function tick(){
-  const ms=Math.max(0,target-new Date());
-  d.textContent=Math.floor(ms/864e5);
-  h.textContent=Math.floor(ms/36e5)%24;
-  m.textContent=Math.floor(ms/6e4)%60;
-  sc.textContent=Math.floor(ms/1e3)%60;
+// موعد الفرح: الأربعاء 4 نوفمبر 2026 - الساعة 7:00 مساءً بتوقيت القاهرة
+// في هذا التاريخ القاهرة تكون UTC+2
+const target = new Date('2026-11-04T17:00:00Z');
+
+const daysEl = document.getElementById('d');
+const hoursEl = document.getElementById('h');
+const minutesEl = document.getElementById('m');
+const secondsEl = document.getElementById('sc');
+
+function tick() {
+  const now = new Date();
+  let ms = target.getTime() - now.getTime();
+
+  // لو الموعد عدى
+  if (ms <= 0) {
+    ms = 0;
+  }
+
+  const days = Math.floor(ms / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((ms / (1000 * 60 * 60)) % 24);
+  const minutes = Math.floor((ms / (1000 * 60)) % 60);
+  const seconds = Math.floor((ms / 1000) % 60);
+
+  daysEl.textContent = days;
+  hoursEl.textContent = hours;
+  minutesEl.textContent = minutes;
+  secondsEl.textContent = seconds;
 }
-tick();setInterval(tick,1000);
+
+// تشغيل العداد فورًا
+tick();
+
+// تحديث كل ثانية
+setInterval(tick, 1000);
 </script>
 </body>
 </html>
